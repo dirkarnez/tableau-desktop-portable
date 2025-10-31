@@ -60,18 +60,18 @@ jobs:
           dir /S
           
       - shell: cmd
-        run: xcopy /H /Y /C "tabpublic.exe.Portable.cmd" ".\tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau_Public\bin\"
+        run: xcopy /H /Y /C "tabpublic.exe.Portable.cmd" ".\tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau\Tableau_Public\bin\"
         
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          directory: "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64/SourceDir/Tableau_Public"
+          directory: "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64/SourceDir/Tableau/Tableau_Public"
           filename: "${{ env.targetZip }}"
           
       - name: Release prebuilt
         uses: ncipollo/release-action@v1.18.0
         with:
-          artifacts: "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64/SourceDir/Tableau_Public/${{ env.targetZip }}"
+          artifacts: "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64/SourceDir/Tableau/Tableau_Public/${{ env.targetZip }}"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
