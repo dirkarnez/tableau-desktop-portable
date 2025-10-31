@@ -1,5 +1,76 @@
-https://www.tableau.com/zh-tw/downloads/public/pc64
--> https://downloads.tableau.com/public/TableauPublicDesktop-64bit-2025-2-4.exe
-# TableauPublicDesktop-64bit-2025-2-4\AttachedContainer\SourceDir\Tableau\Tableau Public 2025.2
-# C:\Users\Administrator\Downloads\TableauPublicDesktop\AttachedContainer\tableau-setup-pub-tableau-2025-2.25.1003.1601-x64.msi
-# C:\Users\Administrator\Downloads\TableauPublicDesktop\AttachedContainer\vcredist2022_x64.exe
+# 
+# -> https://downloads.tableau.com/public/TableauPublicDesktop-64bit-2025-2-4.exe
+# # TableauPublicDesktop-64bit-2025-2-4\
+# # C:\Users\Administrator\Downloads\TableauPublicDesktop\AttachedContainer\
+# # C:\Users\Administrator\Downloads\TableauPublicDesktop\AttachedContainer\vcredist2022_x64.exe
+
+name: portable-release-actions-workflow
+on:
+  push:
+    # # Sequence of patterns matched against refs/tags
+    # tags:
+    #   - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    #   - 'c*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+permissions:
+    contents: write
+    
+jobs:
+  build:
+    name: Create Release
+    runs-on: windows-latest
+    env:
+      targetZip: tableau-desktop-portable-${{ github.ref_name }}.zip
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: installer
+        shell: cmd
+        run: |
+          curl https://www.tableau.com/zh-tw/downloads/public/pc64 -L -J --output installer.exe &&^
+          dir
+          
+      - name: lessmsi 
+        shell: cmd
+        run: | 
+          curl https://github.com/activescott/lessmsi/releases/download/v1.10.0/lessmsi-v1.10.0.zip -L --output lessmsi.zip &&^
+          7z.exe x lessmsi.zip -o"lessmsi"
+          
+      - name: WIX uncompress
+        shell: cmd
+        run: |
+          dark.exe -x "%cd%" installer.exe &&^
+          dir
+
+      - name: uncompress
+        shell: cmd
+        run: |
+          .\lessmsi\lessmsi.exe x "AttachedContainer\tableau-setup-pub-tableau-2025-2.25.1003.1601-x64.msi" &&^
+          dir
+          
+      - shell: cmd
+        run: |
+          cd "SourceDir\Tableau" &&^
+          ren "Tableau Public 2025.2" "Tableau_Public"
+
+      - shell: cmd
+        run: |
+          cd "SourceDir\Tableau\Tableau_Public" &&^
+          dir
+          
+      - shell: cmd
+        run: xcopy /H /Y /C "tableau.exe.Portable.cmd" ".\SourceDir\Tableau_Public\"
+        
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          directory: "SourceDir/Tableau_Public"
+          filename: "${{ env.targetZip }}"
+          
+      - name: Release prebuilt
+        uses: ncipollo/release-action@v1.18.0
+        with:
+          artifacts: "SourceDir/Tableau_Public/${{ env.targetZip }}"
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
