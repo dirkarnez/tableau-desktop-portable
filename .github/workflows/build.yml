@@ -50,27 +50,27 @@ jobs:
           
       - shell: cmd
         run: |
-          cd "SourceDir\Tableau" &&^
+          cd "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau" &&^
           ren "Tableau Public 2025.2" "Tableau_Public"
 
       - shell: cmd
         run: |
-          cd "SourceDir\Tableau\Tableau_Public" &&^
+          cd "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau\Tableau_Public" &&^
           dir
           
       - shell: cmd
-        run: xcopy /H /Y /C "tableau.exe.Portable.cmd" ".\SourceDir\Tableau_Public\"
+        run: xcopy /H /Y /C "tabpublic.exe.Portable.cmd" ".\tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau_Public\"
         
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          directory: "SourceDir/Tableau_Public"
+          directory: "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64/SourceDir/Tableau_Public"
           filename: "${{ env.targetZip }}"
           
       - name: Release prebuilt
         uses: ncipollo/release-action@v1.18.0
         with:
-          artifacts: "SourceDir/Tableau_Public/${{ env.targetZip }}"
+          artifacts: "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64/SourceDir/Tableau_Public/${{ env.targetZip }}"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
