@@ -7,10 +7,10 @@
 name: portable-release-actions-workflow
 on:
   push:
-    # # Sequence of patterns matched against refs/tags
-    # tags:
-    #   - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-    #   - 'c*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'c*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 permissions:
     contents: write
@@ -59,7 +59,7 @@ jobs:
           dir
           
       - shell: cmd
-        run: xcopy /H /Y /C "tabpublic.exe.Portable.cmd" ".\tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau_Public\bin"
+        run: xcopy /H /Y /C "tabpublic.exe.Portable.cmd" ".\tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau_Public\bin\"
         
       - name: Archive Release
         uses: thedoctor0/zip-release@master
