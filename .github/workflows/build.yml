@@ -51,12 +51,13 @@ jobs:
       - shell: cmd
         run: |
           cd "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau" &&^
-          ren "Tableau Public 2025.2" "Tableau_Public"
+          ren "Tableau Public 2025.2" "Tableau_Public" &&^
+          dir /S
 
       - shell: cmd
         run: |
           cd "tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau\Tableau_Public" &&^
-          dir
+          dir /S
           
       - shell: cmd
         run: xcopy /H /Y /C "tabpublic.exe.Portable.cmd" ".\tableau-setup-pub-tableau-2025-2.25.1003.1601-x64\SourceDir\Tableau_Public\bin\"
